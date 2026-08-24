@@ -305,6 +305,41 @@
         loadBookings();
     }
 </script>
+// 表單送出事件（修正版）
+    document.getElementById("bookingForm").addEventListener("submit", function(e) {
+        e.preventDefault();
 
+        const name = document.getElementById("name").value;
+        const phone = document.getElementById("phone").value;
+        const service = document.getElementById("service").value;
+        const date = document.getElementById("date").value;
+        const time = document.getElementById("time").value;
+
+        // 儲存至本地端（供管理後台讀取）
+        let bookings = JSON.parse(localStorage.getItem("yuxin_bookings") || "[]");
+        bookings.push({ name, phone, service, date, time, status: "待審核" });
+        localStorage.setItem("yuxin_bookings", JSON.stringify(bookings));
+
+        // 格式化發送訊息
+        const msg = `【羽芯美容美體 - 預約申請】\n姓名：${name}\n電話：${phone}\n項目：${service}\n日期：${date}\n時間：${time}\n\n已收到您的預約申請，將盡快為您審核確認！`;
+
+        // 判斷是否在 LINE 內開啟
+        if (typeof liff !== "undefined" && liff.isInClient()) {
+            liff.sendMessages([{
+                type: 'text',
+                text: msg
+            }]).then(() => {
+                alert("預約資料已成功送出！");
+                liff.closeWindow(); // 在 LINE 裡面時自動關閉視窗
+            }).catch((err) => {
+                alert("預約已送出！請稍後於對話框確認訊息。");
+                liff.closeWindow();
+            });
+        } else {
+            // 如果是在一般網頁/瀏覽器開啟
+            alert("預約成功送出！管理員將盡快與您聯繫。");
+            document.getElementById("bookingForm").reset(); // 清空表單
+        }
+    });
 </body>
 </html>
