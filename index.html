@@ -1,1 +1,310 @@
-[https://liff.line.me/2007969199](https://liff.line.me/2007969199)
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羽芯美容美體 - 線上預約</title>
+    <!-- LIFF SDK -->
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <style>
+        :root {
+            --bg-color: #F6F1EA;
+            --card-bg: #FFFFFF;
+            --primary: #8A9A86; /* 莫蘭迪綠 */
+            --accent: #D8C7B6;  /* 暖沙色 */
+            --text-dark: #4A4A4A;
+            --text-light: #7A7A7A;
+            --border-color: #E2DCD5;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            color: var(--primary);
+            margin: 0 0 8px 0;
+            letter-spacing: 1px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-dark);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
+            background-color: #FAFAFA;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background-color: #FFF;
+        }
+
+        .btn {
+            width: 100%;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            box-shadow: 0 2px 8px rgba(138, 154, 134, 0.3);
+        }
+
+        .btn:active {
+            opacity: 0.85;
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .admin-link a {
+            font-size: 12px;
+            color: var(--text-light);
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        /* 管理員介面區塊 */
+        .admin-panel {
+            display: none;
+            margin-top: 24px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 20px;
+        }
+
+        .booking-item {
+            background-color: #FAFAFA;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .btn-action {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .btn-approve {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-reject {
+            background-color: #D96B6B;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>羽芯美容美體</h1>
+        <p>線上專屬預約服務</p>
+    </div>
+
+    <!-- 預約表單 -->
+    <form id="bookingForm">
+        <div class="form-group">
+            <label for="name">預約姓名</label>
+            <input type="text" id="name" placeholder="請輸入姓名" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">聯絡電話</label>
+            <input type="tel" id="phone" placeholder="0912345678" required>
+        </div>
+
+        <div class="form-group">
+            <label for="service">服務項目</label>
+            <select id="service" required>
+                <option value="">請選擇預約項目</option>
+                <option value="日系客製化美睫">日系客製化美睫</option>
+                <option value="鍺元素淋巴排導（包含熱電毯）">鍺元素淋巴排導（含熱電毯）</option>
+                <option value="深層肌養顏護理">深層肌養顏護理</option>
+                <option value="全身舒壓芳療 SPA">全身舒壓芳療 SPA</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="date">預約日期</label>
+            <input type="date" id="date" required>
+        </div>
+
+        <div class="form-group">
+            <label for="time">預約時段</label>
+            <select id="time" required>
+                <option value="">請選擇時段</option>
+                <option value="10:00">10:00</option>
+                <option value="13:00">13:00</option>
+                <option value="15:30">15:30</option>
+                <option value="18:00">18:00</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn">送出預約申請</button>
+    </form>
+
+    <div class="admin-link">
+        <a id="toggleAdmin">管理員登入</a>
+    </div>
+
+    <!-- 管理員審核專區 -->
+    <div class="admin-panel" id="adminPanel">
+        <h3>待審核預約列表</h3>
+        <div id="bookingList">
+            <p style="font-size: 12px; color: #888;">目前尚無預約資料。</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 初始化 LIFF
+    document.addEventListener("DOMContentLoaded", function() {
+        // 請確保在此貼入您的 LIFF ID
+        liff.init({ liffId: "2007969199" }).then(() => {
+            console.log("LIFF 初始化成功");
+        }).catch((err) => {
+            console.log("LIFF 初始化失敗", err);
+        });
+    });
+
+    // 表單送出事件
+    document.getElementById("bookingForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name").value;
+        const phone = document.getElementById("phone").value;
+        const service = document.getElementById("service").value;
+        const date = document.getElementById("date").value;
+        const time = document.getElementById("time").value;
+
+        // 儲存至本地端（供管理後台讀取範例）
+        let bookings = JSON.parse(localStorage.getItem("yuxin_bookings") || "[]");
+        bookings.push({ name, phone, service, date, time, status: "待審核" });
+        localStorage.setItem("yuxin_bookings", JSON.stringify(bookings));
+
+        // 格式化發送訊息
+        const msg = `【羽芯美容美體 - 預約申請】\n姓名：${name}\n電話：${phone}\n項目：${service}\n日期：${date}\n時間：${time}\n\n已收到您的預約申請，將盡快為您審核確認！`;
+
+        if (liff.isInClient()) {
+            liff.sendMessages([{
+                type: 'text',
+                text: msg
+            }]).then(() => {
+                alert("預約資料已成功送出！");
+                liff.closeWindow();
+            }).catch((err) => {
+                alert("訊息發送失敗：" + err);
+            });
+        } else {
+            alert("預約成功送出！（非 LINE 環境）");
+            location.reload();
+        }
+    });
+
+    // 管理員登入控制
+    document.getElementById("toggleAdmin").addEventListener("click", function() {
+        const password = prompt("請輸入管理員密碼：");
+        if (password === "0101314") {
+            document.getElementById("adminPanel").style.display = "block";
+            loadBookings();
+        } else if (password !== null) {
+            alert("密碼錯誤！");
+        }
+    });
+
+    function loadBookings() {
+        const listDiv = document.getElementById("bookingList");
+        let bookings = JSON.parse(localStorage.getItem("yuxin_bookings") || "[]");
+        
+        if (bookings.length === 0) {
+            listDiv.innerHTML = '<p style="font-size: 12px; color: #888;">目前尚無預約資料。</p>';
+            return;
+        }
+
+        listDiv.innerHTML = bookings.map((item, index) => `
+            <div class="booking-item">
+                <b>${item.name}</b> (${item.phone})<br>
+                項目：${item.service}<br>
+                時間：${item.date} ${item.time}<br>
+                狀態：<span style="color:${item.status==='已核准'?'green':'#D96B6B'}">${item.status}</span>
+                <div class="btn-action">
+                    <button class="btn-approve" onclick="updateStatus(${index}, '已核准')">核准</button>
+                    <button class="btn-reject" onclick="updateStatus(${index}, '已拒絕')">拒絕</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function updateStatus(index, status) {
+        let bookings = JSON.parse(localStorage.getItem("yuxin_bookings") || "[]");
+        bookings[index].status = status;
+        localStorage.setItem("yuxin_bookings", JSON.stringify(bookings));
+        loadBookings();
+    }
+</script>
+
+</body>
+</html>
